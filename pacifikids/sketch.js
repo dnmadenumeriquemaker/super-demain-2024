@@ -2,14 +2,13 @@ const USE_ARDUINO = false;
 
 let GAME_STEP;
 
-let FIRST_STEP = STEPS.INTRO;
-FIRST_STEP = STEPS.STEP3_WIN;
+let FIRST_STEP = STEPS.WAIT;
+// FIRST_STEP = STEPS.STEP1_PLAY;
 
 
 
 function setup() {
-  createCanvas(400, 300);
-  textSize(24);
+  createCanvas(350, 250);
 
   initArduino();
   initAudios();

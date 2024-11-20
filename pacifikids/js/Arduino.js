@@ -47,18 +47,18 @@ let connectBtn;
 
 function initArduino() {
   if (!USE_ARDUINO) return;
-  
+
   port = createSerial();
 
   // in setup, we can open ports we have used previously
   // without user interaction
 
-  
+
   let usedPorts = usedSerialPorts();
   if (usedPorts.length > 0) {
     port.open(usedPorts[0], 57600);
   }
-  
+
 
   // any other ports can be opened via a dialog after
   // user interaction (see connectBtnClick below)
@@ -73,11 +73,11 @@ function initArduino() {
 function listenToArduino() {
   if (!USE_ARDUINO) return;
   if (!port) return;
-  
+
   let value = port.readUntil("\n");
-  
+
   if (value.length > 0) {
-    
+
     let values = value.split('/');
 
     if (int(values[0]) == 1) {
@@ -133,7 +133,7 @@ function listenToArduino() {
     } else {
       setButtonToInactive('BUTTON_9', true);
     }
-    
+
     HAND_1 = int(values[9]);
     HAND_2 = int(values[10]);
   }
@@ -148,42 +148,49 @@ function listenToArduino() {
 
 function hud() {
   background(220);
-  text('Step : ' + GAME_STEP, 50, 50);
-  
+
+  let stepKey = getKeyByValue(STEPS, GAME_STEP);
+
+  textSize(14);
+  text('Étape : ' + stepKey, 20, 40);
+
+  textSize(10);
+  text(STEPS_ACTIONS[stepKey], 20, 55);
+
   push();
-  translate(100,100);
+  translate(100, 100);
   fill(buttonColor(BUTTONS.BUTTON_1.value));
   ellipse(25, -15, 20, 20);
-  
+
   fill(buttonColor(BUTTONS.BUTTON_2.value));
   ellipse(55, 5, 20, 20);
-  
+
   fill(buttonColor(BUTTONS.BUTTON_3.value));
   ellipse(70, 40, 20, 20);
-  
-  
+
+
   fill(buttonColor(BUTTONS.BUTTON_4.value));
   ellipse(35, 95, 20, 20);
-  
+
   fill(buttonColor(BUTTONS.BUTTON_5.value));
   ellipse(0, 105, 20, 20);
-  
+
   fill(buttonColor(BUTTONS.BUTTON_6.value));
   ellipse(-35, 95, 20, 20);
-  
-  
+
+
   fill(buttonColor(BUTTONS.BUTTON_7.value));
   ellipse(-70, 40, 20, 20);
-  
+
   fill(buttonColor(BUTTONS.BUTTON_8.value));
   ellipse(-55, 5, 20, 20);
-  
+
   fill(buttonColor(BUTTONS.BUTTON_9.value));
   ellipse(-25, -15, 20, 20);
-  
+
   fill(buttonColor(HAND_1));
   rect(150, 0, 50, 50);
-  
+
   fill(buttonColor(HAND_2));
   rect(150, 70, 50, 50);
   pop();
@@ -192,6 +199,15 @@ function hud() {
 
 
 function buttonColor(state) {
-  if (state == true) return color(0,255,0);
-  else return color(0,0,0);
+  if (state == true) return color(0, 255, 0);
+  else return color(0, 0, 0);
+}
+
+function getKeyByValue(object, value) {
+  for (let prop in object) {
+    if (object.hasOwnProperty(prop)) {
+      if (object[prop] === value)
+        return prop;
+    }
+  }
 }
