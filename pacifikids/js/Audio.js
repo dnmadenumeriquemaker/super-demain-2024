@@ -1,0 +1,6 @@
+function initAudios() {
+//  audio_intro = loadSound('audios/Intro_superdemain_1.mp3');
+  audio_intro = document.getElementById('audio_intro');
+  audio_intro2 = document.getElementById('audio_intro2');
+  audio_fail = document.getElementById('audio_fail');
+}
