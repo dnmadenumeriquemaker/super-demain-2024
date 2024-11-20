@@ -2,8 +2,10 @@ const USE_ARDUINO = false;
 
 let GAME_STEP;
 
-let FIRST_STEP = STEPS.WAIT;
-// FIRST_STEP = STEPS.STEP1_PLAY;
+let GAME_STARTING_STEP = STEPS.WAIT;
+// GAME_STARTING_STEP = STEPS.STEP1_PLAY;
+
+let IS_READY = false;
 
 
 
@@ -13,10 +15,24 @@ function setup() {
   initArduino();
   initAudios();
 
-  setStep(FIRST_STEP);
+  // wait for mouse user interaction
+  // (to be able to play audios)
+}
+
+function init() {
+  IS_READY = true;
+  setStep(GAME_STARTING_STEP);
 }
 
 function draw() {
+  if (!IS_READY) {
+    if (mouseIsPressed) {
+      init();
+    } else {
+      return;
+    }
+  }
+  
   // reset all buttons states (keep the lock)
   setAllButtonsToInactive(false);
 
@@ -32,7 +48,6 @@ function draw() {
   // some HUD to debug
   hud();
 }
-
 
 
 
@@ -81,7 +96,6 @@ function setButtonToInactive(buttonName, unlock = false) {
 }
 
 function unlockButton(buttonName) {
-  // BUTTONS[buttonName].value = false;
   BUTTONS[buttonName].locked = false;
 }
 

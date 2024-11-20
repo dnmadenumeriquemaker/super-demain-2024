@@ -78,64 +78,7 @@ function listenToArduino() {
 
   if (value.length > 0) {
 
-    let values = value.split('/');
-
-    if (int(values[0]) == 1) {
-      setButtonToActive('BUTTON_1');
-    } else {
-      setButtonToInactive('BUTTON_1', true);
-    }
-
-    if (int(values[1]) == 1) {
-      setButtonToActive('BUTTON_2');
-    } else {
-      setButtonToInactive('BUTTON_2', true);
-    }
-
-    if (int(values[2]) == 1) {
-      setButtonToActive('BUTTON_3');
-    } else {
-      setButtonToInactive('BUTTON_3', true);
-    }
-
-    if (int(values[3]) == 1) {
-      setButtonToActive('BUTTON_4');
-    } else {
-      setButtonToInactive('BUTTON_4', true);
-    }
-
-    if (int(values[4]) == 1) {
-      setButtonToActive('BUTTON_5');
-    } else {
-      setButtonToInactive('BUTTON_5', true);
-    }
-
-    if (int(values[5]) == 1) {
-      setButtonToActive('BUTTON_6');
-    } else {
-      setButtonToInactive('BUTTON_6', true);
-    }
-
-    if (int(values[6]) == 1) {
-      setButtonToActive('BUTTON_7');
-    } else {
-      setButtonToInactive('BUTTON_7', true);
-    }
-
-    if (int(values[7]) == 1) {
-      setButtonToActive('BUTTON_8');
-    } else {
-      setButtonToInactive('BUTTON_8', true);
-    }
-
-    if (int(values[8]) == 1) {
-      setButtonToActive('BUTTON_9');
-    } else {
-      setButtonToInactive('BUTTON_9', true);
-    }
-
-    HAND_1 = int(values[9]);
-    HAND_2 = int(values[10]);
+    handleSerialData(value);
   }
 
   // changes button label based on connection status
@@ -144,6 +87,69 @@ function listenToArduino() {
   } else {
     //console.log('Connected');
   }
+}
+
+function handleSerialData(value) {
+  let values = value.split('/');
+
+  console.log(int(values[0]) == 1);
+
+  if (int(values[0]) == 1) {
+    setButtonToActive('BUTTON_1');
+  } else {
+    setButtonToInactive('BUTTON_1', true);
+  }
+
+  if (int(values[1]) == 1) {
+    setButtonToActive('BUTTON_2');
+  } else {
+    setButtonToInactive('BUTTON_2', true);
+  }
+
+  if (int(values[2]) == 1) {
+    setButtonToActive('BUTTON_3');
+  } else {
+    setButtonToInactive('BUTTON_3', true);
+  }
+
+  if (int(values[3]) == 1) {
+    setButtonToActive('BUTTON_4');
+  } else {
+    setButtonToInactive('BUTTON_4', true);
+  }
+
+  if (int(values[4]) == 1) {
+    setButtonToActive('BUTTON_5');
+  } else {
+    setButtonToInactive('BUTTON_5', true);
+  }
+
+  if (int(values[5]) == 1) {
+    setButtonToActive('BUTTON_6');
+  } else {
+    setButtonToInactive('BUTTON_6', true);
+  }
+
+  if (int(values[6]) == 1) {
+    setButtonToActive('BUTTON_7');
+  } else {
+    setButtonToInactive('BUTTON_7', true);
+  }
+
+  if (int(values[7]) == 1) {
+    setButtonToActive('BUTTON_8');
+  } else {
+    setButtonToInactive('BUTTON_8', true);
+  }
+
+  if (int(values[8]) == 1) {
+    setButtonToActive('BUTTON_9');
+  } else {
+    setButtonToInactive('BUTTON_9', true);
+  }
+
+  HAND_1 = int(values[9]);
+  HAND_2 = int(values[10]);
 }
 
 function hud() {
