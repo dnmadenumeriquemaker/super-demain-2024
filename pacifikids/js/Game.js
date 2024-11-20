@@ -9,7 +9,7 @@ function setStep(newStep) {
   console.log('Set step: '+newStep);
   
   
-  if (GAME_STEP == STEP_WAIT) {
+  if (GAME_STEP == STEPS.WAIT) {
     // ARDUINO :
     // activer le LED RING
     // mettre la strip à 0
@@ -20,7 +20,7 @@ function setStep(newStep) {
     STEP1_CURRENT_ROUND = 1;
   }
   
-  if (GAME_STEP == STEP_INTRO) {
+  if (GAME_STEP == STEPS.INTRO) {
     // ARDUINO :
     // activer le LED RING
     
@@ -32,7 +32,7 @@ function setStep(newStep) {
     
     audio_intro.addEventListener('ended',function(){
       // on lance l'intro du premier jeu
-      setStep(STEP1_INTRO);
+      setStep(STEPS.STEP1_INTRO);
     })
     
   } else {
@@ -42,7 +42,7 @@ function setStep(newStep) {
   
   
   
-  if (GAME_STEP == STEP1_INTRO) {
+  if (GAME_STEP == STEPS.STEP1_INTRO) {
     // ARDUINO :
     // désactiver le LED RING
     
@@ -54,7 +54,7 @@ function setStep(newStep) {
     
     audio_intro2.addEventListener('ended',function(){
       // on démarre le premier jeu après l'intro
-      setStep(STEP1_PLAY);
+      setStep(STEPS.STEP1_PLAY);
     })
     
   } else {
@@ -66,27 +66,27 @@ function setStep(newStep) {
   
   
   
-  if (GAME_STEP == STEP1_PLAY) {
+  if (GAME_STEP == STEPS.STEP1_PLAY) {
     // wait for buttons
   }
   
   
-  if (GAME_STEP == STEP1_WIN) {
+  if (GAME_STEP == STEPS.STEP1_WIN) {
     console.log('Step1: round '+STEP1_CURRENT_ROUND+' won');
     
     STEP1_CURRENT_ROUND++;
     
     if (STEP1_CURRENT_ROUND > 3) {
-      setStep(STEP1_OUTRO);
+      setStep(STEPS.STEP1_OUTRO);
     } else {
       setTimeout(function() {
-        setStep(STEP1_PLAY);
+        setStep(STEPS.STEP1_PLAY);
       },1000);
     }
   }
   
   
-  if (GAME_STEP == STEP1_LOST) {
+  if (GAME_STEP == STEPS.STEP1_LOST) {
     // SOFTWARE:
     
     // jouer l'audio FAIL
@@ -95,11 +95,11 @@ function setStep(newStep) {
     
     // relancer le tour dans quelques secondes
     setTimeout(function() {
-      setStep(STEP1_PLAY);
+      setStep(STEPS.STEP1_PLAY);
     },10);
   }
   
-  if (GAME_STEP == STEP1_OUTRO) {
+  if (GAME_STEP == STEPS.STEP1_OUTRO) {
     console.log('Step1 ended!');
     
     // ARDUINO :
@@ -109,7 +109,7 @@ function setStep(newStep) {
     // SOFTWARE:
     // on attend que la strip soit entièrement éclairée
     setTimeout(function() {
-      setStep(STEP2_PLAY);
+      setStep(STEPS.STEP2_PLAY);
     }, ARDUINO_STRIP1_DURATION);
   }  
   
@@ -119,7 +119,7 @@ function setStep(newStep) {
   
   
   
-  if (GAME_STEP == STEP2_PLAY) {
+  if (GAME_STEP == STEPS.STEP2_PLAY) {
     // wait for buttons
     
     STEP2_BUTTONS_ENABLED = {
@@ -133,19 +133,21 @@ function setStep(newStep) {
       button8: false,
       button9: false,
     };
+
+    STEP2_BUTTONS_ENABLED_ORDER = [];
   }
   
   
-  if (GAME_STEP == STEP2_WIN) {
+  if (GAME_STEP == STEPS.STEP2_WIN) {
     console.log('Step2: won');
     
     setTimeout(function() {
-      setStep(STEP2_OUTRO);
+      setStep(STEPS.STEP2_OUTRO);
     },1000);
   }
   
   
-  if (GAME_STEP == STEP2_LOST) {
+  if (GAME_STEP == STEPS.STEP2_LOST) {
     // SOFTWARE:
     
     // jouer l'audio FAIL
@@ -154,11 +156,11 @@ function setStep(newStep) {
     
     // relancer le jeu n°2 dans quelques secondes
     setTimeout(function() {
-      setStep(STEP2_PLAY);
+      setStep(STEPS.STEP2_PLAY);
     },10);
   }
   
-  if (GAME_STEP == STEP2_OUTRO) {
+  if (GAME_STEP == STEPS.STEP2_OUTRO) {
     console.log('Step2 ended!');
     
     // ARDUINO :
@@ -168,7 +170,7 @@ function setStep(newStep) {
     // SOFTWARE:
     // on attend que la strip soit entièrement éclairée
     setTimeout(function() {
-      setStep(STEP3_PLAY);
+      setStep(STEPS.STEP3_PLAY);
     }, ARDUINO_STRIP2_DURATION);
   }  
   
@@ -181,7 +183,7 @@ function setStep(newStep) {
   
   
   
-  if (GAME_STEP == STEP3_PLAY) {
+  if (GAME_STEP == STEPS.STEP3_PLAY) {
     // wait for buttons
     
     STEP3_BUTTONS_ENABLED = {
@@ -196,97 +198,228 @@ function setStep(newStep) {
       button9: false,
     };
   }
+
+
+  
+  
+  if (GAME_STEP == STEPS.STEP3_WIN) {
+    console.log('Step3: won');
+    
+    setTimeout(function() {
+      setStep(STEPS.STEP3_OUTRO);
+    },1000);
+  }
+  
+  
+  if (GAME_STEP == STEPS.STEP3_LOST) {
+    // SOFTWARE:
+    
+    // jouer l'audio FAIL
+    audio_fail.currentTime = 0.00001;
+    audio_fail.play();
+    
+    // relancer le jeu n°3 dans quelques secondes
+    setTimeout(function() {
+      setStep(STEPS.STEP3_PLAY);
+    },10);
+  }
+  
+  if (GAME_STEP == STEPS.STEP3_OUTRO) {
+    console.log('Step3 ended!');
+    
+    // ARDUINO :
+    // désactiver le LED RING
+    // mettre la strip à 3
+    
+    // SOFTWARE:
+    // on attend que la strip soit entièrement éclairée
+    setTimeout(function() {
+      setStep(STEPS.HANDS);
+    }, ARDUINO_STRIP3_DURATION);
+  }  
+
+
+
+  
+  
+  
+  if (GAME_STEP == STEPS.HANDS) {
+    // ARDUINO :
+    
+    // SOFTWARE:
+    
+    // jouer l'audio HANDS
+    audio_hands.currentTime = 0.00001;
+    audio_hands.play();
+    
+    audio_hands.addEventListener('ended',function(){
+      // on attend les boutons pour lancer la fin du jeu
+      //setStep(STEPS.OUTRO);
+    })
+    
+  } else {
+    audio_hands.pause();
+    audio_hands.addEventListener('ended',function(){});
+  }
+
+
+  
+  
+  
+  if (GAME_STEP == STEPS.OUTRO) {
+    // ARDUINO :
+    
+    // SOFTWARE:
+    
+    // jouer l'audio HANDS
+    audio_outro.currentTime = 0.00001;
+    audio_outro.play();
+    
+    audio_outro.addEventListener('ended',function(){
+      // on lance la fin du jeu
+      setStep(STEPS.WAIT);
+    })
+    
+  } else {
+    audio_outro.pause();
+    audio_outro.addEventListener('ended',function(){});
+  }
 }
 
 
 function checkStep() {
-  if (GAME_STEP == STEP_WAIT) {
+  if (GAME_STEP == STEPS.WAIT) {
     if (
-        BUTTONS.BUTTON_1.value == true
-     || BUTTONS.BUTTON_2.value == true
-     || BUTTONS.BUTTON_3.value == true
-     || BUTTONS.BUTTON_4.value == true
-     || BUTTONS.BUTTON_5.value == true
-     || BUTTONS.BUTTON_6.value == true
-     || BUTTONS.BUTTON_7.value == true
-     || BUTTONS.BUTTON_8.value == true
-     || BUTTONS.BUTTON_9.value == true) {
-      setStep(STEP_INTRO);
+        isButtonActive('BUTTON_1')
+     || isButtonActive('BUTTON_2') 
+     || isButtonActive('BUTTON_3')
+     || isButtonActive('BUTTON_4')
+     || isButtonActive('BUTTON_5')
+     || isButtonActive('BUTTON_6')
+     || isButtonActive('BUTTON_7')
+     || isButtonActive('BUTTON_8')
+     || isButtonActive('BUTTON_9')) {
+      setStep(STEPS.INTRO);
     }
   }
   
-  if (GAME_STEP == STEP_INTRO) {
+  if (GAME_STEP == STEPS.INTRO) {
     // wait for audio_intro ended
   }
   
-  if (GAME_STEP == STEP1_PLAY) {
+  if (GAME_STEP == STEPS.STEP1_PLAY) {
     
     console.log('Step1: playing round '+STEP1_CURRENT_ROUND);
     
     if (STEP1_CURRENT_ROUND == 1) {
       if (BUTTONS.BUTTON_2.value == true) {
-        setStep(STEP1_WIN);
+        setStep(STEPS.STEP1_WIN);
       } else if (
-          BUTTONS.BUTTON_1.value == true
-       || BUTTONS.BUTTON_3.value == true
-       || BUTTONS.BUTTON_4.value == true
-       || BUTTONS.BUTTON_5.value == true
-       || BUTTONS.BUTTON_6.value == true
-       || BUTTONS.BUTTON_7.value == true
-       || BUTTONS.BUTTON_8.value == true
-       || BUTTONS.BUTTON_9.value == true) {
-        setStep(STEP1_LOST);
+          isButtonActive('BUTTON_1')
+       || isButtonActive('BUTTON_3')
+       || isButtonActive('BUTTON_4')
+       || isButtonActive('BUTTON_5')
+       || isButtonActive('BUTTON_6')
+       || isButtonActive('BUTTON_7')
+       || isButtonActive('BUTTON_8')
+       || isButtonActive('BUTTON_9')) {
+        setStep(STEPS.STEP1_LOST);
       }
     }
     
     else if (STEP1_CURRENT_ROUND == 2) {
-      if (BUTTONS.BUTTON_3.value == true) {
-        setStep(STEP1_WIN);
+      if (isButtonActive('BUTTON_3')) {
+        setStep(STEPS.STEP1_WIN);
       } else if (
-          BUTTONS.BUTTON_1.value == true
-       || BUTTONS.BUTTON_2.value == true
-       || BUTTONS.BUTTON_4.value == true
-       || BUTTONS.BUTTON_5.value == true
-       || BUTTONS.BUTTON_6.value == true
-       || BUTTONS.BUTTON_7.value == true
-       || BUTTONS.BUTTON_8.value == true
-       || BUTTONS.BUTTON_9.value == true) {
-        setStep(STEP1_LOST);
+          isButtonActive('BUTTON_1')
+       || isButtonActive('BUTTON_2')
+       || isButtonActive('BUTTON_4')
+       || isButtonActive('BUTTON_5')
+       || isButtonActive('BUTTON_6')
+       || isButtonActive('BUTTON_7')
+       || isButtonActive('BUTTON_8')
+       || isButtonActive('BUTTON_9')) {
+        setStep(STEPS.STEP1_LOST);
       }
     }
     
     else if (STEP1_CURRENT_ROUND == 3) {
-      if (BUTTONS.BUTTON_8.value == true) {
-        setStep(STEP1_WIN);
+      if (isButtonActive('BUTTON_8')) {
+        setStep(STEPS.STEP1_WIN);
       } else if (
-          BUTTONS.BUTTON_1.value == true
-       || BUTTONS.BUTTON_2.value == true
-       || BUTTONS.BUTTON_3.value == true
-       || BUTTONS.BUTTON_4.value == true
-       || BUTTONS.BUTTON_5.value == true
-       || BUTTONS.BUTTON_6.value == true
-       || BUTTONS.BUTTON_7.value == true
-       || BUTTONS.BUTTON_9.value == true) {
-        setStep(STEP1_LOST);
+          isButtonActive('BUTTON_1')
+       || isButtonActive('BUTTON_2') 
+       || isButtonActive('BUTTON_3')
+       || isButtonActive('BUTTON_4')
+       || isButtonActive('BUTTON_5')
+       || isButtonActive('BUTTON_6')
+       || isButtonActive('BUTTON_7')
+       || isButtonActive('BUTTON_9')) {
+        setStep(STEPS.STEP1_LOST);
       }
     }
   }
   
   
   
-  if (GAME_STEP == STEP2_PLAY) {
+  if (GAME_STEP == STEPS.STEP2_PLAY) {
     
     console.log('Step2: playing');
     
-    if (BUTTONS.BUTTON_1.value == true) STEP2_BUTTONS_ENABLED.button1 = true;
-    if (BUTTONS.BUTTON_2.value == true) STEP2_BUTTONS_ENABLED.button2 = true;
-    if (BUTTONS.BUTTON_3.value == true) STEP2_BUTTONS_ENABLED.button3 = true;
-    if (BUTTONS.BUTTON_4.value == true) STEP2_BUTTONS_ENABLED.button4 = true;
-    if (BUTTONS.BUTTON_5.value == true) STEP2_BUTTONS_ENABLED.button5 = true;
-    if (BUTTONS.BUTTON_6.value == true) STEP2_BUTTONS_ENABLED.button6 = true;
-    if (BUTTONS.BUTTON_7.value == true) STEP2_BUTTONS_ENABLED.button7 = true;
-    if (BUTTONS.BUTTON_8.value == true) STEP2_BUTTONS_ENABLED.button8 = true;
-    if (BUTTONS.BUTTON_9.value == true) STEP2_BUTTONS_ENABLED.button9 = true;
+    if (isButtonActive('BUTTON_1')) {
+      STEP2_BUTTONS_ENABLED.button1 = true;
+      if (!STEP2_BUTTONS_ENABLED_ORDER.includes(1)) {
+        STEP2_BUTTONS_ENABLED_ORDER.push(1);
+      }
+    }
+    if (isButtonActive('BUTTON_2')) {
+      STEP2_BUTTONS_ENABLED.button2 = true;
+      if (!STEP2_BUTTONS_ENABLED_ORDER.includes(2)) {
+        STEP2_BUTTONS_ENABLED_ORDER.push(2);
+      }
+    }
+    if (isButtonActive('BUTTON_3')) {
+      STEP2_BUTTONS_ENABLED.button3 = true;
+      if (!STEP2_BUTTONS_ENABLED_ORDER.includes(3)) {
+        STEP2_BUTTONS_ENABLED_ORDER.push(3);
+      }
+    }
+    if (isButtonActive('BUTTON_4')) {
+      STEP2_BUTTONS_ENABLED.button4 = true;
+      if (!STEP2_BUTTONS_ENABLED_ORDER.includes(4)) {
+        STEP2_BUTTONS_ENABLED_ORDER.push(4);
+      }
+    }
+    if (isButtonActive('BUTTON_5')) {
+      STEP2_BUTTONS_ENABLED.button5 = true;
+      if (!STEP2_BUTTONS_ENABLED_ORDER.includes(5)) {
+        STEP2_BUTTONS_ENABLED_ORDER.push(5);
+      }
+    }
+    if (isButtonActive('BUTTON_6')) {
+      STEP2_BUTTONS_ENABLED.button6 = true;
+      if (!STEP2_BUTTONS_ENABLED_ORDER.includes(6)) {
+        STEP2_BUTTONS_ENABLED_ORDER.push(6);
+      }
+    }
+    if (isButtonActive('BUTTON_7')) {
+      STEP2_BUTTONS_ENABLED.button7 = true;
+      if (!STEP2_BUTTONS_ENABLED_ORDER.includes(7)) {
+        STEP2_BUTTONS_ENABLED_ORDER.push(7);
+      }
+    }
+    if (isButtonActive('BUTTON_8')) {
+      STEP2_BUTTONS_ENABLED.button8 = true;
+      if (!STEP2_BUTTONS_ENABLED_ORDER.includes(8)) {
+        STEP2_BUTTONS_ENABLED_ORDER.push(8);
+      }
+    }
+    if (isButtonActive('BUTTON_9')) {
+      STEP2_BUTTONS_ENABLED.button9 = true;
+      if (!STEP2_BUTTONS_ENABLED_ORDER.includes(9)) {
+        STEP2_BUTTONS_ENABLED_ORDER.push(9);
+      }
+    }
     
     let STEP2_NB_BUTTONS_ENABLED = 0;
     
@@ -300,16 +433,13 @@ function checkStep() {
     if (STEP2_BUTTONS_ENABLED.button8 == true) STEP2_NB_BUTTONS_ENABLED++;
     if (STEP2_BUTTONS_ENABLED.button9 == true) STEP2_NB_BUTTONS_ENABLED++;
     
-    console.log(STEP2_BUTTONS_ENABLED);
-    console.log(STEP2_NB_BUTTONS_ENABLED);
-    
     if (STEP2_NB_BUTTONS_ENABLED >= 3) {
       if (STEP2_BUTTONS_ENABLED.button8 == true
        && STEP2_BUTTONS_ENABLED.button2 == true
        && STEP2_BUTTONS_ENABLED.button3 == true) {
-        // TODO: order!! (this code is OK for game 3)
+        setStep(STEPS.STEP2_WIN);
       } else {
-        setStep(STEP2_LOST);
+        setStep(STEPS.STEP2_LOST);
       }
     }
     
@@ -317,19 +447,19 @@ function checkStep() {
   
   
   
-  if (GAME_STEP == STEP3_PLAY) {
+  if (GAME_STEP == STEPS.STEP3_PLAY) {
     
     console.log('Step3: playing');
     
-    if (BUTTONS.BUTTON_1.value == true) STEP3_BUTTONS_ENABLED.button1 = true;
-    if (BUTTONS.BUTTON_2.value == true) STEP3_BUTTONS_ENABLED.button2 = true;
-    if (BUTTONS.BUTTON_3.value == true) STEP3_BUTTONS_ENABLED.button3 = true;
-    if (BUTTONS.BUTTON_4.value == true) STEP3_BUTTONS_ENABLED.button4 = true;
-    if (BUTTONS.BUTTON_5.value == true) STEP3_BUTTONS_ENABLED.button5 = true;
-    if (BUTTONS.BUTTON_6.value == true) STEP3_BUTTONS_ENABLED.button6 = true;
-    if (BUTTONS.BUTTON_7.value == true) STEP3_BUTTONS_ENABLED.button7 = true;
-    if (BUTTONS.BUTTON_8.value == true) STEP3_BUTTONS_ENABLED.button8 = true;
-    if (BUTTONS.BUTTON_9.value == true) STEP3_BUTTONS_ENABLED.button9 = true;
+    if (isButtonActive('BUTTON_1')) STEP3_BUTTONS_ENABLED.button1 = true;
+    if (isButtonActive('BUTTON_2')) STEP3_BUTTONS_ENABLED.button2 = true;
+    if (isButtonActive('BUTTON_3')) STEP3_BUTTONS_ENABLED.button3 = true;
+    if (isButtonActive('BUTTON_4')) STEP3_BUTTONS_ENABLED.button4 = true;
+    if (isButtonActive('BUTTON_5')) STEP3_BUTTONS_ENABLED.button5 = true;
+    if (isButtonActive('BUTTON_6')) STEP3_BUTTONS_ENABLED.button6 = true;
+    if (isButtonActive('BUTTON_7')) STEP3_BUTTONS_ENABLED.button7 = true;
+    if (isButtonActive('BUTTON_8')) STEP3_BUTTONS_ENABLED.button8 = true;
+    if (isButtonActive('BUTTON_9')) STEP3_BUTTONS_ENABLED.button9 = true;
     
     let STEP3_NB_BUTTONS_ENABLED = 0;
     
@@ -344,12 +474,21 @@ function checkStep() {
     if (STEP3_BUTTONS_ENABLED.button9 == true) STEP3_NB_BUTTONS_ENABLED++;
     
     if (STEP3_NB_BUTTONS_ENABLED >= 3) {
-      if (STEP3_BUTTONS_ENABLED.button8 == true
-       && STEP3_BUTTONS_ENABLED.button2 == true
-       && STEP3_BUTTONS_ENABLED.button3 == true) {
-        // TODO: order!! (this code is OK for game 3)
+      if (STEP3_BUTTONS_ENABLED.button4 == true
+       && STEP3_BUTTONS_ENABLED.button1 == true
+       && STEP3_BUTTONS_ENABLED.button9 == true) {
+        setStep(STEPS.STEP3_WIN);
+      } else {
+        setStep(STEPS.STEP3_LOST);
       }
     }
     
+  }
+
+
+  if (GAME_STEP == STEPS.HANDS) {
+    if (HAND_1 == true && HAND_2 == true) {
+      setStep(STEPS.OUTRO);
+    }
   }
 }

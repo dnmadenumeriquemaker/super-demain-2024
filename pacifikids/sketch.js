@@ -2,8 +2,8 @@ const USE_ARDUINO = false;
 
 let GAME_STEP;
 
-let FIRST_STEP = STEP1_INTRO;
-FIRST_STEP = STEP2_PLAY;
+let FIRST_STEP = STEPS.INTRO;
+FIRST_STEP = STEPS.STEP3_WIN;
 
 
 
@@ -18,9 +18,8 @@ function setup() {
 }
 
 function draw() {
-  console.log('draw');
   // reset all buttons states (keep the lock)
-  setAllButtonsToInactive();
+  setAllButtonsToInactive(false);
 
   // listen to Arduino inputs
   listenToArduino();
@@ -28,20 +27,17 @@ function draw() {
   // detect keyboard inputs (debug)
   checkKeyPressed();
 
-  background(220);
-  text('Step : ' + GAME_STEP, 50, 50);
-
-  debugArduino();
-
-  console.log('checkstep');
+  // do something accordingly to the current step
   checkStep();
+
+  // some HUD to debug
+  hud();
 }
 
 
 
 
 function checkKeyPressed() {
-  console.log('checkKeyPressed');
 
   if (keyIsDown(66)) { // 'b'
     port.open("Arduino", 57600);
@@ -72,6 +68,10 @@ function setButtonToActive(buttonName) {
     BUTTONS[buttonName].value = true;
     BUTTONS[buttonName].locked = true;
   }
+}
+
+function isButtonActive(buttonName) {
+  return BUTTONS[buttonName].value;
 }
 
 function setButtonToInactive(buttonName, unlock = false) {

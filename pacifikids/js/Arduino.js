@@ -146,7 +146,10 @@ function listenToArduino() {
   }
 }
 
-function debugArduino() {
+function hud() {
+  background(220);
+  text('Step : ' + GAME_STEP, 50, 50);
+  
   push();
   translate(100,100);
   fill(buttonColor(BUTTONS.BUTTON_1.value));
