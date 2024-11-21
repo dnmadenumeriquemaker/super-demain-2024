@@ -50,42 +50,59 @@ function initArduino() {
 
   port = createSerial();
 
-  // in setup, we can open ports we have used previously
-  // without user interaction
-
-
-  let usedPorts = usedSerialPorts();
-  if (usedPorts.length > 0) {
-    port.open(usedPorts[0], 57600);
-  }
 
 
   // any other ports can be opened via a dialog after
   // user interaction (see connectBtnClick below)
 
-  /*
   connectBtn = createButton('Connect to Arduino');
   connectBtn.position(80, 200);
   connectBtn.mousePressed(connectBtnClick);
-  */
+
+
+  // in setup, we can open ports we have used previously
+  // without user interaction
+
+  let usedPorts = usedSerialPorts();
+
+  console.log('usedPorts', usedPorts);
+
+
+
+  if (usedPorts.length > 0) {
+    port.open(usedPorts[0], 57600);
+    if (connectBtn) {
+      connectBtn.remove();
+    }
+  }
+}
+
+function connectBtnClick() {
+  if (!port.opened()) {
+    port.open('Arduino', 57600);
+    connectBtn.remove();
+  } else {
+    //port.close();
+  }
 }
 
 function listenToArduino() {
   if (!USE_ARDUINO) return;
   if (!port) return;
 
-  let value = port.readUntil("\n");
-
-  if (value.length > 0) {
-
-    handleSerialData(value);
-  }
-
-  // changes button label based on connection status
   if (!port.opened()) {
-    //console.log('Waiting for Arduino');
+    console.log('Waiting for Arduino');
   } else {
     //console.log('Connected');
+
+
+    let value = port.readUntil("\n");
+
+    console.log('Serial value:', value);
+
+    if (value.length > 0) {
+      handleSerialData(value);
+    }
   }
 }
 
