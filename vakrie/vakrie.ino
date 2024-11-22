@@ -1,65 +1,155 @@
-#include <Adafruit_NeoPixel.h>
+#include <FastLED.h>
+#define BUTTON_PIN_1 3         // Broche du bouton poussoir
+#define BUTTON_PIN_2 4         // Broche du bouton poussoir
 
-#define BUTTON_PIN 7         // Broche du bouton poussoir
-#define SOUND_SENSOR A0      // Broche du capteur sonore
-#define RING_PIN 8           // Broche pour l'anneau NeoPixel
-#define NUM_LEDS_RING 24     // Nombre de LEDs sur l'anneau
-#define LED_PINS {1, 2, 3, 4, 5, 6}  // Broches des LEDs simples
+const int LED_PINS[6] = {5, 6, 7, 8, 9, 10};  // Broches des LEDs simples
 
-// Configuration des NeoPixels
-Adafruit_NeoPixel ring = Adafruit_NeoPixel(NUM_LEDS_RING, RING_PIN, NEO_GRB + NEO_KHZ800);
+#define NUM_LEDS 24
+#define DATA_PIN 2
+
+CRGB leds[NUM_LEDS];
 
 // Définition des états
 bool processActive = false;
 unsigned long lastActionTime = 0;
 
-// Broches des LEDs simples
-int ledPins[] = LED_PINS;
+
+String value;
 
 // Fonction pour configurer les pins
 void setup() {
   // Initialisation des LEDs simples
   for (int i = 0; i < 6; i++) {
-    pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i], LOW);
+    pinMode(LED_PINS[i], OUTPUT);
+    digitalWrite(LED_PINS[i], LOW);
   }
-  
+
   // Configuration bouton
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
-  
-  // Initialisation des NeoPixels
-  ring.begin();
-  ring.show(); // Éteint toutes les LEDs
-  
+  pinMode(BUTTON_PIN_1, INPUT_PULLUP);
+  pinMode(BUTTON_PIN_2, INPUT_PULLUP);
+
+  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
+  FastLED.show();
+
   // Initialisation du port série
-  Serial.begin(9600);
+  Serial.begin(57600);
 }
 
 // Fonction principale
 void loop() {
-  static bool buttonPressed = false;
+  Serial.println("YE");
 
-  // Lecture de l'état du bouton
-  if (digitalRead(BUTTON_PIN) == LOW && !buttonPressed) {
+  while (Serial.available()) {
+    char c = Serial.read();  //gets one byte from serial buffer
+    value += c; //makes the String readString
+    delay(2);  //slow looping to allow buffer to fill with next character
+  }
+
+  if (value.length() > 0) {
+     //Serial.print("Recu : ");
+     //Serial.println(value);
+
+    if (value == "s/0") {
+      // éteindre tout
+    }
+
+    if (value == "l/1") {
+      // allume LED 1
+      digitalWrite(LED_PINS[0], HIGH);
+      digitalWrite(LED_PINS[1], LOW);
+      digitalWrite(LED_PINS[2], LOW);
+      digitalWrite(LED_PINS[3], LOW);
+      digitalWrite(LED_PINS[4], LOW);
+      digitalWrite(LED_PINS[5], LOW);
+    }
+
+    if (value == "l/2") {
+      // allume LED 2
+      digitalWrite(LED_PINS[0], HIGH);
+      digitalWrite(LED_PINS[1], HIGH);
+      digitalWrite(LED_PINS[2], LOW);
+      digitalWrite(LED_PINS[3], LOW);
+      digitalWrite(LED_PINS[4], LOW);
+      digitalWrite(LED_PINS[5], LOW);
+    }
+
+    if (value == "l/3") {
+      // allume LED 3
+      digitalWrite(LED_PINS[0], HIGH);
+      digitalWrite(LED_PINS[1], HIGH);
+      digitalWrite(LED_PINS[2], HIGH);
+      digitalWrite(LED_PINS[3], LOW);
+      digitalWrite(LED_PINS[4], LOW);
+      digitalWrite(LED_PINS[5], LOW);
+    }
+
+    if (value == "l/4") {
+      // allume LED 4
+      digitalWrite(LED_PINS[0], HIGH);
+      digitalWrite(LED_PINS[1], HIGH);
+      digitalWrite(LED_PINS[2], HIGH);
+      digitalWrite(LED_PINS[3], HIGH);
+      digitalWrite(LED_PINS[4], LOW);
+      digitalWrite(LED_PINS[5], LOW);
+    }
+
+    if (value == "l/5") {
+      // allume LED 5
+      digitalWrite(LED_PINS[0], HIGH);
+      digitalWrite(LED_PINS[1], HIGH);
+      digitalWrite(LED_PINS[2], HIGH);
+      digitalWrite(LED_PINS[3], HIGH);
+      digitalWrite(LED_PINS[4], HIGH);
+      digitalWrite(LED_PINS[5], LOW);
+    }
+
+    if (value == "l/6") {
+      // allume LED 6
+      digitalWrite(LED_PINS[0], HIGH);
+      digitalWrite(LED_PINS[1], HIGH);
+      digitalWrite(LED_PINS[2], HIGH);
+      digitalWrite(LED_PINS[3], HIGH);
+      digitalWrite(LED_PINS[4], HIGH);
+      digitalWrite(LED_PINS[5], HIGH);
+    }
+
+    if (value == "s/2") {
+      // fin du jeu : clignotement ?
+    }
+
+  }
+
+  
+
+  Serial.print(!digitalRead(BUTTON_PIN_1));
+  Serial.print("/");
+  Serial.println(!digitalRead(BUTTON_PIN_2));
+  /*
+    static bool buttonPressed = false;
+
+    // Lecture de l'état du bouton
+    if (digitalRead(BUTTON_PIN) == LOW && !buttonPressed) {
     processActive = !processActive; // Bascule l'état actif
     buttonPressed = true;
     delay(200); // Anti-rebond
-  } else if (digitalRead(BUTTON_PIN) == HIGH) {
+    } else if (digitalRead(BUTTON_PIN) == HIGH) {
     buttonPressed = false;
-  }
+    }
 
-  // Si le processus est actif, lance la séquence
-  if (processActive) {
+    // Si le processus est actif, lance la séquence
+    if (processActive) {
     countdownRing();
     handleSoundSensor();
-  }
+    }
+  */
 }
 
 // Compte à rebours sur l'anneau NeoPixel
-void countdownRing() {
+
+/*void countdownRing() {
   unsigned long countdownStartTime = millis();
   int stepDuration = 3000 / NUM_LEDS_RING; // Durée pour chaque LED
-  
+
   for (int i = 0; i < NUM_LEDS_RING; i++) {
     // Détermine la couleur
     uint32_t color;
@@ -70,12 +160,12 @@ void countdownRing() {
     } else {
       color = ring.Color(255, 0, 0); // Rouge
     }
-    
+
     ring.setPixelColor(i, color);
     ring.show();
     delay(stepDuration);
   }
-  
+
   // Clignotement des LEDs pour signaler la fin
   for (int j = 0; j < 5; j++) {
     ring.fill(ring.Color(255, 0, 0)); // Rouge
@@ -119,4 +209,4 @@ void handleSoundSensor() {
     }
     lastActionTime = millis(); // Réinitialise le temps
   }
-}
+}*/

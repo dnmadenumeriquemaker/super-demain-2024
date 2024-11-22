@@ -76,6 +76,11 @@ function setStep(newStep) {
   if (GAME_STEP == STEPS.STEP1_WIN) {
     console.log('Step1: round ' + STEP1_CURRENT_ROUND + ' won');
 
+
+    // jouer l'audio SUCCESS
+    audio_success.currentTime = 0.00001;
+    audio_success.play();
+
     STEP1_CURRENT_ROUND++;
 
     if (STEP1_CURRENT_ROUND > 3) {
@@ -149,6 +154,10 @@ function setStep(newStep) {
   if (GAME_STEP == STEPS.STEP2_WIN) {
     console.log('Step2: won');
 
+    // jouer l'audio SUCCESS
+    audio_success.currentTime = 0.00001;
+    audio_success.play();
+
     setTimeout(function () {
       setStep(STEPS.STEP2_OUTRO);
     }, 1000);
@@ -218,6 +227,10 @@ function setStep(newStep) {
 
   if (GAME_STEP == STEPS.STEP3_WIN) {
     console.log('Step3: won');
+
+    // jouer l'audio SUCCESS
+    audio_success.currentTime = 0.00001;
+    audio_success.play();
 
     setTimeout(function () {
       setStep(STEPS.STEP3_OUTRO);
@@ -455,8 +468,8 @@ function checkStep() {
 
     if (STEP2_NB_BUTTONS_ENABLED >= 3) {
       if (STEP2_BUTTONS_ENABLED.button8 == true
-        && STEP2_BUTTONS_ENABLED.button2 == true
-        && STEP2_BUTTONS_ENABLED.button3 == true) {
+        && STEP2_BUTTONS_ENABLED.button3 == true
+        && STEP2_BUTTONS_ENABLED.button5 == true) {
         setStep(STEPS.STEP2_WIN);
       } else {
         setStep(STEPS.STEP2_LOST);
