@@ -13,6 +13,8 @@ function setStep(newStep) {
     // ARDUINO :
     // activer le LED RING
     // mettre la strip à 0
+    console.log('Send a/0 to Arduino');
+    port.write('a/0');
 
     // SOFTWARE:
 
@@ -105,6 +107,8 @@ function setStep(newStep) {
     // ARDUINO :
     // désactiver le LED RING
     // mettre la strip à 1
+    console.log('Send a/1 to Arduino');
+    port.write('a/1');
 
     // jouer l'audio PROGRESS
     audio_progress.currentTime = 0.00001;
@@ -170,6 +174,8 @@ function setStep(newStep) {
     // ARDUINO :
     // désactiver le LED RING
     // mettre la strip à 2
+    console.log('Send a/2 to Arduino');
+    port.write('a/2');
 
     // jouer l'audio PROGRESS
     audio_progress.currentTime = 0.00001;
@@ -238,6 +244,8 @@ function setStep(newStep) {
     // ARDUINO :
     // désactiver le LED RING
     // mettre la strip à 3
+    console.log('Send a/3 to Arduino');
+    port.write('a/3');
 
     // jouer l'audio PROGRESS
     audio_progress.currentTime = 0.00001;

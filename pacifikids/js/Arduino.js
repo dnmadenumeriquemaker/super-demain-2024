@@ -108,8 +108,9 @@ function listenToArduino() {
 
 function handleSerialData(value) {
   let values = value.split('/');
-
-  console.log(int(values[0]) == 1);
+  
+  if (values[0] == 'none') return;
+  if (values[0] == 'a') return;
 
   if (int(values[0]) == 1) {
     setButtonToActive('BUTTON_1');
@@ -173,7 +174,7 @@ function hud() {
   background(220);
 
   let stepKey = getKeyByValue(STEPS, GAME_STEP);
-
+fill(0);
   textSize(14);
   text('Étape : ' + stepKey, 20, 40);
 
@@ -216,7 +217,6 @@ function hud() {
 
   fill(buttonColor(HAND_2));
   rect(150, 70, 50, 50);
-  pop();
 }
 
 

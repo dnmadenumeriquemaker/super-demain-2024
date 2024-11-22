@@ -3,7 +3,7 @@ const USE_ARDUINO = true;
 let GAME_STEP;
 
 let GAME_STARTING_STEP = STEPS.WAIT;
-// GAME_STARTING_STEP = STEPS.STEP1_OUTRO;
+GAME_STARTING_STEP = STEPS.HANDS;
 
 let IS_READY = false;
 
@@ -67,7 +67,7 @@ function checkKeyPressed() {
   if (keyIsDown(56) || keyIsDown(33)) { setButtonToActive('BUTTON_8'); } // '8' or '!'
   if (keyIsDown(57) || keyIsDown(231)) { setButtonToActive('BUTTON_9'); } // '9' or 'ç'
   if (keyIsDown(65)) { HAND_1 = true; } // 'a'
-  if (keyIsDown(90)) { HAND_2 = true; } // 'z'
+  if (keyIsDown(90)) { HAND_2 = true; } 
 }
 
 function keyReleased() {
