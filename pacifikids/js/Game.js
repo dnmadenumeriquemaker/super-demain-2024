@@ -267,7 +267,8 @@ function setStep(newStep) {
     // SOFTWARE:
     // on attend que la strip soit entièrement éclairée
     setTimeout(function () {
-      setStep(STEPS.HANDS);
+      // setStep(STEPS.HANDS); // TODO
+      setStep(STEPS.OUTRO);
     }, ARDUINO_STRIP3_DURATION);
   }
 
