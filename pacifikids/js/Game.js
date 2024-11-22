@@ -345,13 +345,13 @@ function checkStep() {
     console.log('Step1: playing round ' + STEP1_CURRENT_ROUND);
 
     if (STEP1_CURRENT_ROUND == 1) {
-      if (BUTTONS.BUTTON_2.value == true) {
+      if (BUTTONS.BUTTON_5.value == true) {
         setStep(STEPS.STEP1_WIN);
       } else if (
         isButtonActive('BUTTON_1')
+        || isButtonActive('BUTTON_2')
         || isButtonActive('BUTTON_3')
         || isButtonActive('BUTTON_4')
-        || isButtonActive('BUTTON_5')
         || isButtonActive('BUTTON_6')
         || isButtonActive('BUTTON_7')
         || isButtonActive('BUTTON_8')
@@ -468,8 +468,8 @@ function checkStep() {
 
     if (STEP2_NB_BUTTONS_ENABLED >= 3) {
       if (STEP2_BUTTONS_ENABLED.button8 == true
-        && STEP2_BUTTONS_ENABLED.button3 == true
-        && STEP2_BUTTONS_ENABLED.button5 == true) {
+        && STEP2_BUTTONS_ENABLED.button5 == true
+        && STEP2_BUTTONS_ENABLED.button3 == true) {
         setStep(STEPS.STEP2_WIN);
       } else {
         setStep(STEPS.STEP2_LOST);
@@ -508,8 +508,8 @@ function checkStep() {
 
     if (STEP3_NB_BUTTONS_ENABLED >= 3) {
       if (STEP3_BUTTONS_ENABLED.button1 == true
-        && STEP3_BUTTONS_ENABLED.button2 == true
-        && STEP3_BUTTONS_ENABLED.button3 == true) {
+       && STEP3_BUTTONS_ENABLED.button2 == true
+       && STEP3_BUTTONS_ENABLED.button3 == true) {
         setStep(STEPS.STEP3_WIN);
       } else {
         setStep(STEPS.STEP3_LOST);
