@@ -507,9 +507,9 @@ function checkStep() {
     if (STEP3_BUTTONS_ENABLED.button9 == true) STEP3_NB_BUTTONS_ENABLED++;
 
     if (STEP3_NB_BUTTONS_ENABLED >= 3) {
-      if (STEP3_BUTTONS_ENABLED.button4 == true
-        && STEP3_BUTTONS_ENABLED.button1 == true
-        && STEP3_BUTTONS_ENABLED.button9 == true) {
+      if (STEP3_BUTTONS_ENABLED.button1 == true
+        && STEP3_BUTTONS_ENABLED.button2 == true
+        && STEP3_BUTTONS_ENABLED.button3 == true) {
         setStep(STEPS.STEP3_WIN);
       } else {
         setStep(STEPS.STEP3_LOST);
