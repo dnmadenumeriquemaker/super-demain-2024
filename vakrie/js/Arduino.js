@@ -68,7 +68,7 @@ function handleSerialData(value) {
 
   let values = value.split('/');
 
-  console.log('Arduino received '+value);
+  console.log('[ Arduino ] '+value);
 
   if (values[0] == 'none') return;
   // if (values[0] == 'a') return;
@@ -127,8 +127,12 @@ function checkMic() {
   let vol = input.getLevel();
 
   // intensity
-  let level = int(map(vol * 100, SEUIL_MIN, SEUIL_MAX, 1, 7));
+  let level = int(map(vol * 1000, 0, SEUIL_MAX, 1, 7));
 
+  console.log('VOL '+(vol*100));
+  console.log('LEVEL '+level);
+
+  level = Math.abs(level);
 
   if (level > maxLevel) {
     maxLevel = level;
@@ -141,6 +145,7 @@ function checkMic() {
 
 
   // duration
+  /*
   if (vol >= 0.75) {
     intensity++;
     console.log('intensity', intensity);
@@ -151,7 +156,7 @@ function checkMic() {
     }
 
     if (ledState > 6) ledState = 6;
-  }
+  }*/
 
 
   // console.log(vol);

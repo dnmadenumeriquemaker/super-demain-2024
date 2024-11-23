@@ -19,7 +19,7 @@ let maxLevel = 0;
 let stepIntensity = 10;
 
 let SEUIL_MIN = 40;
-let SEUIL_MAX = 100;
+let SEUIL_MAX = 1;
 
 function setup() {
   createCanvas(350, 250);
