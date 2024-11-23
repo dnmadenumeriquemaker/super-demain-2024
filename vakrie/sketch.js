@@ -16,7 +16,7 @@ let maxIntensity = seconds * 60;
 
 let maxLevel = 0;
 
-let stepIntensity = 8;
+let stepIntensity = 10;
 
 let SEUIL_MIN = 40;
 let SEUIL_MAX = 100;
