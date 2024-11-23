@@ -141,14 +141,17 @@ function checkMic() {
 
 
   // duration
-  // if (vol > 0.5) {
-  //   intensity++;
+  if (vol >= 0.5) {
+    intensity++;
+    console.log('intensity', intensity);
 
-  //   if (intensity >= stepIntensity) {
-  //     ledState++;
-  //     intensity = 0;
-  //   }
-  // }
+    if (intensity >= stepIntensity) {
+      ledState++;
+      intensity = 0;
+    }
+
+    if (ledState > 6) ledState = 6;
+  }
 
 
   // console.log(vol);
@@ -161,5 +164,6 @@ function sendToArduino() {
   console.log('send maxlevel: ' + maxLevel);
 
   //port.write(parseInt(maxLevel));
-  port.write(""+maxLevel+"");
+  // port.write(""+maxLevel+"");
+  port.write(""+ledState+"");
 }

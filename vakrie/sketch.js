@@ -16,9 +16,9 @@ let maxIntensity = seconds * 60;
 
 let maxLevel = 0;
 
-let stepIntensity = 10;
+let stepIntensity = 8;
 
-let SEUIL_MIN = 20;
+let SEUIL_MIN = 40;
 let SEUIL_MAX = 100;
 
 function setup() {
@@ -75,6 +75,10 @@ function checkStep() {
   if (STEP == 1) {
     checkMic();
   }
+
+  if (STEP == 2) {
+    envoiRegulier = null;
+  }
 }
 
 let envoiRegulier = null;
@@ -101,7 +105,12 @@ function setStep(newStep) {
 
     
     envoiRegulier = setInterval(function () {
+      if (STEP == 1) {
       sendToArduino();
+      } else {
+        envoiRegulier = null;
+        clearInterval(envoiRegulier);
+      }
     }, 200);
     
 
@@ -113,13 +122,16 @@ function setStep(newStep) {
 
   if (STEP == 2) {
     console.log('setstep 2');
+    clearInterval(envoiRegulier);
     envoiRegulier = null;
 
-    port.write('7');
+    setTimeout(function () {
+      port.write('7');
+    },100);
 
     setTimeout(function () {
       setStep(0);
-    }, 7000);
+    }, 1000);
   }
 }
 
