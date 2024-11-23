@@ -117,7 +117,7 @@ function setStep(newStep) {
 
     setTimeout(function () {
       setStep(2);
-    }, duration);
+    }, duration+2000);
   }
 
   if (STEP == 2) {
