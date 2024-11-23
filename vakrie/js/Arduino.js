@@ -164,6 +164,6 @@ function sendToArduino() {
   console.log('send maxlevel: ' + maxLevel);
 
   //port.write(parseInt(maxLevel));
-  // port.write(""+maxLevel+"");
-  port.write(""+ledState+"");
+  port.write(""+maxLevel+"");
+  // port.write(""+ledState+"");
 }
