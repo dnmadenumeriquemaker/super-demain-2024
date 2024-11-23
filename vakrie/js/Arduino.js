@@ -141,7 +141,7 @@ function checkMic() {
 
 
   // duration
-  if (vol >= 0.5) {
+  if (vol >= 0.75) {
     intensity++;
     console.log('intensity', intensity);
 
