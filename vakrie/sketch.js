@@ -14,6 +14,8 @@ let duration = seconds * 1000;
 let maxIntensity = seconds * 60;
 // let stepIntensity = maxIntensity/12;
 
+let maxLevel = 0;
+
 let stepIntensity = 10;
 
 let SEUIL_MIN = 20;
@@ -29,7 +31,7 @@ function setup() {
 
   // wait for mouse user interaction
   // (to be able to play audios)
-  
+
 }
 
 function init() {
@@ -50,7 +52,7 @@ function draw() {
       return;
     }
   }
-  
+
 
   checkKeyPressed();
 
@@ -68,7 +70,11 @@ function draw() {
 function checkStep() {
   if (STEP == 0) {
     if (BUTTON_1 == true && BUTTON_2 == true) {
-      setStep(1);
+      port.write('s/1');
+
+      setTimeout(function () {
+        setStep(1);
+      }, 10);
     }
   }
 
@@ -88,24 +94,29 @@ function setStep(newStep) {
 
   if (STEP == 1) {
     // console.log('send led state: 1');
-    //port.write('s/1');
     ledState = 0;
     intensity = 0;
+    maxLevel = 0;
     // detect mic
     // launch timer
 
-    setTimeout(function(){
+    setTimeout(function () {
       setStep(2);
     }, duration);
   }
 
   if (STEP == 2) {
 
+    setTimeout(function() {
+      // send max level
+      port.write('m/'+maxLevel);
+    }, 10);
+
     port.write('s/2');
 
-    setTimeout(function(){
+    setTimeout(function () {
       setStep(0);
-    }, 3000);
+    }, 7000);
   }
 }
 

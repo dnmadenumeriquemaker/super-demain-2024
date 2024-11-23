@@ -57,7 +57,6 @@ function listenToArduino() {
 
     let value = port.readUntil("\n");
 
-    console.log('Serial value:', value);
 
     if (value.length > 0) {
       handleSerialData(value);
@@ -66,21 +65,22 @@ function listenToArduino() {
 }
 
 function handleSerialData(value) {
+  console.log('Serial value:', value);
+
   let values = value.split('/');
-  
+
   if (values[0] == 'none') return;
   // if (values[0] == 'a') return;
 
-  if (value == '1/1') {
+  if (value == "1/1\r\n") { // dirty but okay-ish
     BUTTON_1 = true;
     BUTTON_2 = true;
   } else {
-
     BUTTON_1 = false;
     BUTTON_2 = false;
   }
-  /*
 
+  /*
   console.log('value1: ', int(values[0]));
   console.log('value2: ', int(values[1]));
 
@@ -95,7 +95,7 @@ function handleSerialData(value) {
   } else {
     BUTTON_2 = false;
   }
-    */
+  */
 
 }
 
@@ -129,9 +129,18 @@ function checkMic() {
   let level = int(map(vol * 100, SEUIL_MIN, SEUIL_MAX, 1, 7));
 
   console.log(level);
-  
-  console.log('send l/'+level);
-  port.write('l/'+level);
+
+  console.log('send l/' + level);
+  port.write('l/' + level);
+
+  if (level > maxLevel) {
+    maxLevel = level;
+
+    setTimeout(function () {
+      // send max level
+      port.write('m/' + maxLevel);
+    }, 10);
+  }
 
 
   // duration

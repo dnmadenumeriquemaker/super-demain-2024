@@ -13,6 +13,10 @@ CRGB leds[NUM_LEDS];
 bool processActive = false;
 unsigned long lastActionTime = 0;
 
+int currentLed = 0;
+bool animate = false;
+
+int count = 0;
 
 String value;
 
@@ -31,6 +35,7 @@ void setup() {
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
   FastLED.show();
 
+
   // Initialisation du port série
   Serial.begin(57600);
 }
@@ -46,11 +51,30 @@ void loop() {
   }
 
   if (value.length() > 0) {
-     //Serial.print("Recu : ");
-     //Serial.println(value);
+    //Serial.print("Recu : ");
+    //Serial.println(value);
 
     if (value == "s/0") {
       // éteindre tout
+      digitalWrite(LED_PINS[0], LOW);
+      digitalWrite(LED_PINS[1], LOW);
+      digitalWrite(LED_PINS[2], LOW);
+      digitalWrite(LED_PINS[3], LOW);
+      digitalWrite(LED_PINS[4], LOW);
+      digitalWrite(LED_PINS[5], LOW);
+    }
+
+    if (value == "s/1") {
+      digitalWrite(LED_PINS[0], LOW);
+      digitalWrite(LED_PINS[1], LOW);
+      digitalWrite(LED_PINS[2], LOW);
+      digitalWrite(LED_PINS[3], LOW);
+      digitalWrite(LED_PINS[4], LOW);
+      digitalWrite(LED_PINS[5], LOW);
+      currentLed = 0;
+      animate = true;
+
+      count = 0;
     }
 
     if (value == "l/1") {
@@ -114,16 +138,51 @@ void loop() {
     }
 
     if (value == "s/2") {
+      animate = false;
       // fin du jeu : clignotement ?
     }
 
   }
 
+
+  // animate ring led
+
+  // animate = true; // TODO: remove
+
+  Serial.println(count);
+  Serial.println(currentLed);
+
+  if (animate == true) {
+    count++;
+    if (count % 10 == 0) {
+      currentLed++;
+    }
+  }
+
+  if (currentLed > NUM_LEDS) {
+    currentLed = NUM_LEDS;
+  }
+
+  for (int i = 0; i <= NUM_LEDS; i++) {
+    leds[i] = CRGB::Black;
+  }
+
+  for (int i = 0; i <= currentLed; i++) {
+    leds[i] = CRGB::White;
+  }
   
+  FastLED.show();
+
+  
+  // send button states
 
   Serial.print(!digitalRead(BUTTON_PIN_1));
   Serial.print("/");
   Serial.println(!digitalRead(BUTTON_PIN_2));
+
+
+
+  
   /*
     static bool buttonPressed = false;
 
@@ -142,7 +201,14 @@ void loop() {
     handleSoundSensor();
     }
   */
+
+  delay(50);
 }
+
+
+
+
+
 
 // Compte à rebours sur l'anneau NeoPixel
 
@@ -175,10 +241,10 @@ void loop() {
     ring.show();
     delay(300);
   }
-}
+  }
 
-// Lecture du capteur sonore et activation des LEDs simples
-void handleSoundSensor() {
+  // Lecture du capteur sonore et activation des LEDs simples
+  void handleSoundSensor() {
   int sensorValue = analogRead(SOUND_SENSOR);
   Serial.println(sensorValue); // Pour déboguer
 
@@ -209,4 +275,4 @@ void handleSoundSensor() {
     }
     lastActionTime = millis(); // Réinitialise le temps
   }
-}*/
+  }*/
