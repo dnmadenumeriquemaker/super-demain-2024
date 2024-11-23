@@ -27,11 +27,8 @@ function setup() {
   initArduino();
   initAudios();
 
-
-
   // wait for mouse user interaction
   // (to be able to play audios)
-
 }
 
 function init() {
@@ -45,6 +42,7 @@ function init() {
 }
 
 function draw() {
+
   if (!IS_READY) {
     if (mouseIsPressed) {
       init();
@@ -53,14 +51,12 @@ function draw() {
     }
   }
 
-
   checkKeyPressed();
 
   checkStep();
 
   // listen to Arduino inputs
   listenToArduino();
-
 
   // some HUD to debug
   hud();
@@ -70,11 +66,9 @@ function draw() {
 function checkStep() {
   if (STEP == 0) {
     if (BUTTON_1 == true && BUTTON_2 == true) {
-      port.write('s/1');
+      // port.write('s/1');
 
-      setTimeout(function () {
-        setStep(1);
-      }, 10);
+      setStep(1);
     }
   }
 
@@ -83,13 +77,15 @@ function checkStep() {
   }
 }
 
+let envoiRegulier = null;
+
 function setStep(newStep) {
   STEP = newStep;
 
   if (STEP == 0) {
     // send led state: 0
     console.log('send led state: 0');
-    port.write('s/0');
+    port.write('0');
   }
 
   if (STEP == 1) {
@@ -100,19 +96,26 @@ function setStep(newStep) {
     // detect mic
     // launch timer
 
+
+    // port.write('3');
+
+    
+    envoiRegulier = setInterval(function () {
+      sendToArduino();
+    }, 200);
+    
+
+
     setTimeout(function () {
       setStep(2);
     }, duration);
   }
 
   if (STEP == 2) {
+    console.log('setstep 2');
+    envoiRegulier = null;
 
-    setTimeout(function() {
-      // send max level
-      port.write('m/'+maxLevel);
-    }, 10);
-
-    port.write('s/2');
+    port.write('7');
 
     setTimeout(function () {
       setStep(0);
@@ -124,7 +127,7 @@ function setStep(newStep) {
 function checkKeyPressed() {
 
   if (keyIsDown(66)) { // 'b'
-    port.open("Arduino", 57600);
+    port.open("Arduino", 9600);
   }
 
   if (keyIsDown(65)) { BUTTON_1 = true; } // 'a'

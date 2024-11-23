@@ -1,13 +1,13 @@
-#include <FastLED.h>
+// #include <FastLED.h>
 #define BUTTON_PIN_1 3         // Broche du bouton poussoir
 #define BUTTON_PIN_2 4         // Broche du bouton poussoir
 
-const int LED_PINS[6] = {5, 6, 7, 8, 9, 10};  // Broches des LEDs simples
+const int LED_PINS[6] = {5, 9, 10, 8, 6, 7};  // Broches des LEDs simples
 
 #define NUM_LEDS 24
 #define DATA_PIN 2
 
-CRGB leds[NUM_LEDS];
+// CRGB leds[NUM_LEDS];
 
 // Définition des états
 bool processActive = false;
@@ -18,41 +18,65 @@ bool animate = false;
 
 int count = 0;
 
-String value;
 
 // Fonction pour configurer les pins
 void setup() {
   // Initialisation des LEDs simples
   for (int i = 0; i < 6; i++) {
     pinMode(LED_PINS[i], OUTPUT);
-    digitalWrite(LED_PINS[i], LOW);
+    digitalWrite(LED_PINS[i], HIGH);
   }
+
+  // 5 = niveau 1
+  // 9 = niveau 2
+  // 10 = niveau 3
+  // 8 = niveau 4
+  // 6 = niveau 5
+  // 7 = niveau 6
+
+
+  //digitalWrite(7, HIGH);
 
   // Configuration bouton
   pinMode(BUTTON_PIN_1, INPUT_PULLUP);
   pinMode(BUTTON_PIN_2, INPUT_PULLUP);
 
-  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
-  FastLED.show();
+  /*
+    FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
+    FastLED.show();
+  */
 
 
   // Initialisation du port série
   Serial.begin(57600);
 }
 
+
 // Fonction principale
 void loop() {
-  Serial.println("YE");
+  Serial.println("OH");
 
-  while (Serial.available()) {
-    char c = Serial.read();  //gets one byte from serial buffer
-    value += c; //makes the String readString
-    delay(2);  //slow looping to allow buffer to fill with next character
-  }
+  if (Serial.available()) {
+    String value = Serial.readStringUntil('\n'); // Lire la ligne entière reçue
 
-  if (value.length() > 0) {
-    //Serial.print("Recu : ");
-    //Serial.println(value);
+    //  removeTrailingNewline(value);
+
+    // Afficher le message reçu
+    Serial.print("ARDUINO Message reçu : ");
+    Serial.println(value);
+    /*
+      Serial.print("COMP1: ");
+      Serial.println(value == "l/1");
+      Serial.print("COMP2: ");
+      Serial.println(value == "l/1 ");
+      Serial.print("COMP3: ");
+      Serial.println(value == "l/1\r");
+      Serial.print("COMP4: ");
+      Serial.println(value == "l/1\r\n");
+    */
+
+
+
 
     if (value == "s/0") {
       // éteindre tout
@@ -71,13 +95,18 @@ void loop() {
       digitalWrite(LED_PINS[3], LOW);
       digitalWrite(LED_PINS[4], LOW);
       digitalWrite(LED_PINS[5], LOW);
-      currentLed = 0;
-      animate = true;
+      /*
+        currentLed = 0;
+        animate = true;
 
-      count = 0;
+        count = 0;
+      */
     }
 
     if (value == "l/1") {
+
+      Serial.print("LEVEL 1");
+
       // allume LED 1
       digitalWrite(LED_PINS[0], HIGH);
       digitalWrite(LED_PINS[1], LOW);
@@ -88,6 +117,8 @@ void loop() {
     }
 
     if (value == "l/2") {
+      Serial.print("LEVEL 2");
+
       // allume LED 2
       digitalWrite(LED_PINS[0], HIGH);
       digitalWrite(LED_PINS[1], HIGH);
@@ -98,6 +129,7 @@ void loop() {
     }
 
     if (value == "l/3") {
+      Serial.print("LEVEL 3");
       // allume LED 3
       digitalWrite(LED_PINS[0], HIGH);
       digitalWrite(LED_PINS[1], HIGH);
@@ -141,39 +173,43 @@ void loop() {
       animate = false;
       // fin du jeu : clignotement ?
     }
-
   }
+
+
 
 
   // animate ring led
 
   // animate = true; // TODO: remove
 
-  Serial.println(count);
-  Serial.println(currentLed);
+  /*
+    Serial.println(count);
+    Serial.println(currentLed);
 
-  if (animate == true) {
-    count++;
-    if (count % 10 == 0) {
-      currentLed++;
+    if (animate == true) {
+      count++;
+      if (count % 10 == 0) {
+        currentLed++;
+      }
     }
-  }
 
-  if (currentLed > NUM_LEDS) {
-    currentLed = NUM_LEDS;
-  }
+    if (currentLed > NUM_LEDS) {
+      currentLed = NUM_LEDS;
+    }
 
-  for (int i = 0; i <= NUM_LEDS; i++) {
-    leds[i] = CRGB::Black;
-  }
+    for (int i = 0; i <= NUM_LEDS; i++) {
+      leds[i] = CRGB::Black;
+    }
 
-  for (int i = 0; i <= currentLed; i++) {
-    leds[i] = CRGB::White;
-  }
-  
-  FastLED.show();
+    for (int i = 0; i <= currentLed; i++) {
+      leds[i] = CRGB::White;
+    }
 
-  
+
+    FastLED.show();
+  */
+
+
   // send button states
 
   Serial.print(!digitalRead(BUTTON_PIN_1));
@@ -182,7 +218,7 @@ void loop() {
 
 
 
-  
+
   /*
     static bool buttonPressed = false;
 
@@ -202,12 +238,19 @@ void loop() {
     }
   */
 
-  delay(50);
+  delay(100);
 }
 
 
 
-
+// Fonction pour supprimer les caractères de fin comme '\r' ou '\n'
+void removeTrailingNewline(char* str) {
+  int len = strlen(str);
+  while (len > 0 && (str[len - 1] == '\n' || str[len - 1] == '\r')) {
+    str[len - 1] = '\0';
+    len--;
+  }
+}
 
 
 // Compte à rebours sur l'anneau NeoPixel

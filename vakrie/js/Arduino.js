@@ -29,7 +29,7 @@ function initArduino() {
 
 
   if (usedPorts.length > 0) {
-    port.open(usedPorts[0], 57600);
+    port.open(usedPorts[0], 9600);
     if (connectBtn) {
       connectBtn.remove();
     }
@@ -38,7 +38,7 @@ function initArduino() {
 
 function connectBtnClick() {
   if (!port.opened()) {
-    port.open('Arduino', 57600);
+    port.open('Arduino', 9600);
     connectBtn.remove();
   } else {
     //port.close();
@@ -56,18 +56,19 @@ function listenToArduino() {
 
 
     let value = port.readUntil("\n");
-
-
+    
     if (value.length > 0) {
       handleSerialData(value);
     }
   }
+
 }
 
 function handleSerialData(value) {
-  console.log('Serial value:', value);
 
   let values = value.split('/');
+
+  console.log('Arduino received '+value);
 
   if (values[0] == 'none') return;
   // if (values[0] == 'a') return;
@@ -128,18 +129,14 @@ function checkMic() {
   // intensity
   let level = int(map(vol * 100, SEUIL_MIN, SEUIL_MAX, 1, 7));
 
-  console.log(level);
-
-  console.log('send l/' + level);
-  port.write('l/' + level);
 
   if (level > maxLevel) {
     maxLevel = level;
 
-    setTimeout(function () {
-      // send max level
-      port.write('m/' + maxLevel);
-    }, 10);
+    // setTimeout(function () {
+    //   // send max level
+    //  // port.write('m/' + maxLevel);
+    // }, 10);
   }
 
 
@@ -157,4 +154,12 @@ function checkMic() {
   // console.log(vol);
   // console.log(intensity);
   // console.log('ledState', ledState);
+}
+
+function sendToArduino() {
+
+  console.log('send maxlevel: ' + maxLevel);
+
+  //port.write(parseInt(maxLevel));
+  port.write(""+maxLevel+"");
 }
